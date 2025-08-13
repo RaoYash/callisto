@@ -1,0 +1,47 @@
+<div class="chat-container">
+  <div class="message-list">
+    <div *ngFor="let msg of messages$ | async" class="message" [ngClass]="'role-' + msg.role">
+      <div class="avatar" [ngClass]="'avatar-' + msg.role"></div>
+      <div class="message-content">
+        <p [innerHTML]="msg.content"></p>
+
+        <!-- 
+          Generative UI Rendering.
+          FIX: Changed the *ngIf to be more explicit for the template's type checker.
+          This ensures that within this container, msg.uiMessage is correctly
+          typed as RenderHtmlMessage.
+        -->
+        <ng-container *ngIf="msg.uiMessage && msg.uiMessage.type === 'render_html'">
+           <!-- This is where the magic happens. We pass the schema to our dynamic form -->
+           <callisto-dynamic-form 
+              [schema]="msg.uiMessage.schema" 
+              [toolName]="msg.uiMessage.toolName"
+              (formSubmit)="onFormSubmit($event)">
+           </callisto-dynamic-form>
+        </ng-container>
+
+      </div>
+    </div>
+    <div *ngIf="isLoading$ | async" class="message role-assistant">
+       <div class="avatar avatar-assistant"></div>
+       <div class="message-content">
+          <div class="typing-indicator">
+             <span></span><span></span><span></span>
+          </div>
+       </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <form (ngSubmit)="sendMessage()">
+      <input
+        type="text"
+        [(ngModel)]="userInput"
+        name="userInput"
+        placeholder="Ask me anything..."
+        [disabled]="(isLoading$ | async) ?? false"
+      />
+      <button type="submit" [disabled]="isLoading$ | async">Send</button>
+    </form>
+  </div>
+</div>

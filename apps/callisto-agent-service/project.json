@@ -1,0 +1,68 @@
+{
+  "name": "callisto-agent-service",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "root": "apps/callisto-agent-service",
+  "sourceRoot": "apps/callisto-agent-service/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/callisto-agent-service",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "callisto-agent-service/src/main.ts",
+        "tsConfig": "callisto-agent-service/tsconfig.app.json",
+        "assets": ["callisto-agent-service/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "callisto-agent-service:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "callisto-agent-service:build:development"
+        },
+        "production": {
+          "buildTarget": "callisto-agent-service:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "callisto-agent-service/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

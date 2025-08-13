@@ -29,7 +29,7 @@
       "path": "./tsconfig.spec.json"
     },
     {
-      "path": "./tsconfig.server.json"
+      "path": "apps/callisto-rendering-service/tsconfig.server.json"
     }
   ]
 }

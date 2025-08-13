@@ -1,0 +1,41 @@
+{
+  "name": "callisto",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/callisto/src",
+  "prefix": "callisto",
+  "targets": {
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/callisto/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/callisto/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@angular/build:karma",
+      "options": {
+        "tsConfig": "libs/callisto/tsconfig.spec.json",
+        "polyfills": [
+          "zone.js",
+          "zone.js/testing"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@angular-eslint/builder:lint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/callisto/**/*.ts",
+          "libs/callisto/**/*.html"
+        ],
+        "eslintConfig": "libs/callisto/eslint.config.mjs"
+      }
+    }
+  }
+}

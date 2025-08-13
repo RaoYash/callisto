@@ -1,0 +1,41 @@
+<div class="dynamic-form-container">
+  <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div *ngFor="let field of formFields" class="form-field">
+      <label [for]="field.key">{{ field.label }}</label>
+
+      <!-- Render different input types based on schema -->
+      <ng-container [ngSwitch]="field.type">
+        <input
+          *ngSwitchCase="'text'"
+          [type]="field.type"
+          [id]="field.key"
+          [formControlName]="field.key"
+        />
+        <input
+          *ngSwitchCase="'number'"
+          [type]="field.type"
+          [id]="field.key"
+          [formControlName]="field.key"
+        />
+        <!-- Add more cases for other types like select, date, etc. -->
+      </ng-container>
+
+      <!-- Validation Error Display -->
+      <div
+        *ngIf="
+          form.controls[field.key].invalid &&
+          (form.controls[field.key].dirty || form.controls[field.key].touched)
+        "
+        class="error-message"
+      >
+        <div *ngIf="form.errors?.['zod']?.[field.key]">
+          {{ form.errors?.['zod']?.[field.key] }}
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-button" [disabled]="form.invalid">
+      Submit
+    </button>
+  </form>
+</div>
